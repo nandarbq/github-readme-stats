@@ -48,19 +48,19 @@ function calculateRank({
 
   // Custom ranking thresholds
   const THRESHOLDS = [
-    10, 20, 30, 40, 50, 60, 70, 100
-  ];
+  50, 60, 70, 80, 90, 95, 98, 100
+];
 
-  const LEVELS = [
-    "S",
-    "A+",
-    "A",
-    "B+",
-    "B",
-    "C+",
-    "C",
-    "D",
-  ];
+const LEVELS = [
+  "S",
+  "A+",
+  "A",
+  "B+",
+  "B",
+  "C+",
+  "C",
+  "D",
+];
 
   const index = THRESHOLDS.findIndex(
     (threshold) => percentile <= threshold
