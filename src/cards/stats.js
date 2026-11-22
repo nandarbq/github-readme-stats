@@ -173,6 +173,8 @@ const getStyles = ({
   textColor,
   iconColor,
   ringColor,
+  rankColor,
+  rankRingColor,
   show_icons,
   progress,
 }) => {
@@ -189,9 +191,9 @@ const getStyles = ({
       animation: fadeInAnimation 0.3s ease-in-out forwards;
     }
     .rank-text {
-      font: 800 24px 'Segoe UI', Ubuntu, Sans-Serif; fill: ${textColor};
-      animation: scaleInAnimation 0.3s ease-in-out forwards;
-    }
+  font: 800 24px 'Segoe UI', Ubuntu, Sans-Serif; fill: ${rankColor};
+  animation: scaleInAnimation 0.3s ease-in-out forwards;
+}
     .rank-percentile-header {
       font-size: 14px;
     }
@@ -207,13 +209,13 @@ const getStyles = ({
     }
 
     .rank-circle-rim {
-      stroke: ${ringColor};
+  stroke: ${rankRingColor};
       fill: none;
       stroke-width: 6;
       opacity: 0.2;
     }
     .rank-circle {
-      stroke: ${ringColor};
+  stroke: ${rankRingColor};
       stroke-dasharray: 250;
       fill: none;
       stroke-width: 6;
@@ -310,6 +312,10 @@ const renderStatsCard = (stats, options = {}) => {
       ring_color,
       theme,
     });
+
+  // Custom gold color for S rank
+const rankColor = rank?.level === "S" ? "#FFD700" : textColor;
+const rankRingColor = rank?.level === "S" ? "#FFD700" : ringColor;
 
   const apostrophe = /s$/i.test(name.trim()) ? "" : "s";
   const i18n = new I18n({
@@ -452,13 +458,15 @@ const renderStatsCard = (stats, options = {}) => {
   // the lower the user's percentile the better
   const progress = 100 - rank.percentile;
   const cssStyles = getStyles({
-    titleColor,
-    ringColor,
-    textColor,
-    iconColor,
-    show_icons,
-    progress,
-  });
+  titleColor,
+  ringColor,
+  textColor,
+  iconColor,
+  rankColor,
+  rankRingColor,
+  show_icons,
+  progress,
+});
 
   const calculateTextWidth = () => {
     return measureText(
