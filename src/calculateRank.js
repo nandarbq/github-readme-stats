@@ -1,13 +1,11 @@
 
 /**
  * Custom GitHub Stats Ranking
- * Sistem penilaian lebih ramah untuk developer individu.
- *
- * Skor maksimum: 100
+ * Easier ranking system for individual developers.
  */
 
 function calculateRank({
-  all_commits,
+  all_commits = false,
   commits = 0,
   prs = 0,
   issues = 0,
@@ -16,41 +14,42 @@ function calculateRank({
   stars = 0,
   followers = 0,
 }) {
-  // Target pencapaian untuk skor penuh
+  // Achievement targets
   const TARGETS = {
-    commits: all_commits ? 2000 : 1000,
-    prs: 25,
-    repos: 10,
-    stars: 20,
-    issues: 10,
-    reviews: 10,
-    followers: 20,
+    commits: 500,
+    prs: 10,
+    issues: 5,
+    reviews: 5,
+    stars: 5,
+    followers: 10,
   };
 
-  // Bobot masing-masing statistik
+  // Metric weights (total = 100)
   const WEIGHTS = {
     commits: 30,
     prs: 20,
-    repos: 20,
-    stars: 15,
     issues: 5,
     reviews: 10,
+    stars: 15,
+    followers: 20,
   };
 
-  // Hitung skor berdasarkan pencapaian
+  // Calculate normalized score
   const score =
     Math.min(commits / TARGETS.commits, 1) * WEIGHTS.commits +
     Math.min(prs / TARGETS.prs, 1) * WEIGHTS.prs +
-    Math.min(repos / TARGETS.repos, 1) * WEIGHTS.repos +
-    Math.min(stars / TARGETS.stars, 1) * WEIGHTS.stars +
     Math.min(issues / TARGETS.issues, 1) * WEIGHTS.issues +
-    Math.min(reviews / TARGETS.reviews, 1) * WEIGHTS.reviews;
+    Math.min(reviews / TARGETS.reviews, 1) * WEIGHTS.reviews +
+    Math.min(stars / TARGETS.stars, 1) * WEIGHTS.stars +
+    Math.min(followers / TARGETS.followers, 1) * WEIGHTS.followers;
 
-  // Konversi skor ke percentile untuk kompatibilitas kartu
+  // Convert score into percentile format
   const percentile = 100 - score;
 
-  // Standar ranking custom
-  const THRESHOLDS = [5, 10, 15, 20, 25, 30, 40, 100];
+  // Custom ranking thresholds
+  const THRESHOLDS = [
+    10, 20, 30, 40, 50, 60, 70, 100
+  ];
 
   const LEVELS = [
     "S",
@@ -63,8 +62,11 @@ function calculateRank({
     "D",
   ];
 
-  const level =
-    LEVELS[THRESHOLDS.findIndex((threshold) => percentile <= threshold)];
+  const index = THRESHOLDS.findIndex(
+    (threshold) => percentile <= threshold
+  );
+
+  const level = LEVELS[index === -1 ? LEVELS.length - 1 : index];
 
   return {
     level,
